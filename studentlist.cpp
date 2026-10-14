@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
+#include <iomanip>
 
 using namespace std;
 //Diya Ganguly 10-16-2026
@@ -18,8 +19,7 @@ struct StudentInfo {
 //function prototypes
 void readIn(vector<StudentInfo>& entry);
 void printOut(vector<StudentInfo>& entry);
-void removeStudent();
-
+void removeStudent(vector<StudentInfo>& entry);
 
 int main() {
   
@@ -36,6 +36,7 @@ int main() {
       readIn(entry);
     } else if(strcmp(user_input, "REMOVE") == 0) {
       cout << "Removing..." << endl;
+      removeStudent(entry);
     } else if(strcmp(user_input, "PRINT") == 0) {
       cout << "Printing..." << endl;
       printOut(entry);
@@ -50,6 +51,7 @@ int main() {
 
 //functions
 
+//adding a student
 void readIn(vector<StudentInfo>& entry) {
   StudentInfo tempStudent;
   
@@ -68,7 +70,8 @@ void readIn(vector<StudentInfo>& entry) {
   //enter student id
   cout << "Enter their student id: ";
   cin >> tempStudent.studentid;
-  cout << "You entered: " << tempStudent.studentid << endl;
+  cout << "You entered: ";
+  cout << fixed << setprecision(2) << tempStudent.studentid << endl;
 
   //enter their gpa
   cout << "Enter their gpa: ";
@@ -78,6 +81,7 @@ void readIn(vector<StudentInfo>& entry) {
   
 }
 
+//printing out all the students
 //mr galbraith helped me with the iterators
 void printOut(vector<StudentInfo>& entry) {
   for(vector<StudentInfo>:: iterator it = entry.begin(); it != entry.end(); ++it) {
@@ -87,8 +91,18 @@ void printOut(vector<StudentInfo>& entry) {
   }
 }
 
+//removing a student by their studnt id
 void removeStudent(vector<StudentInfo>& entry) {
+  StudentInfo tempStudent;
   
+  cout << "Enter the ID of the student you want to delete: ";
+  cin >> tempStudent.studentid;
+
+  for(vector<StudentInfo>:: iterator it = entry.begin(); it != entry.end(); ++it) {
+    if (it->studentid == tempStudent.studentid ) {
+      it = entry.erase(it);
+    }
+  }
 
 }
 	       
