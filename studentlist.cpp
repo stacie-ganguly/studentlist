@@ -17,24 +17,24 @@ struct StudentInfo {
 
 
 //function prototypes
-void readIn(vector<StudentInfo>& entry);
-void printOut(vector<StudentInfo>& entry);
-void removeStudent(vector<StudentInfo>& entry);
+void readIn(vector<StudentInfo*>& entry);
+void printOut(vector<StudentInfo*>& entry);
+void removeStudent(vector<StudentInfo*>& entry);
 
 int main() {
   
-  vector<StudentInfo> entry; 
+  vector<StudentInfo*> entry; 
   char user_input[50];
   bool running = true;
   
   while (running == true) {
-    cout << "Would you like to ADD, PRINT, REMOVE, or QUIT: ";
+    cout << "Would you like to ADD, PRINT, DELETE, or QUIT: ";
     cin >> user_input;
 
     if(strcmp(user_input, "ADD") == 0) {
       cout << "Adding..." << endl;
       readIn(entry);
-    } else if(strcmp(user_input, "REMOVE") == 0) {
+    } else if(strcmp(user_input, "DELETE") == 0) {
       cout << "Removing..." << endl;
       removeStudent(entry);
     } else if(strcmp(user_input, "PRINT") == 0) {
@@ -46,63 +46,74 @@ int main() {
     
   }
 
+  //free allocated memory for remaining students
+  for(vector<StudentInfo*>::iterator it = entry.begin(); it != entry.end(); ++it) {
+	delete *it;
+  }
+
+  entry.clear(); 
+
   return 0;
 }
 
 //functions
 
 //adding a student
-void readIn(vector<StudentInfo>& entry) {
-  StudentInfo tempStudent;
+void readIn(vector<StudentInfo*>& entry) {
+  StudentInfo* tempStudent = new StudentInfo;
   
   cin.ignore();
 
   //add first name
   cout << "Enter the first name of the student: ";
-  cin.getline(tempStudent.firstname, 50);
-  cout << "You entered: " << tempStudent.firstname << endl;
+  cin.getline(tempStudent->firstname, 50);
+  cout << "You entered: " << tempStudent->firstname << endl;
 
   //add lastname
   cout << "Enter the last name of the student: ";
-  cin.getline(tempStudent.lastname, 50);
-  cout << "You entered: " << tempStudent.lastname << endl;
+  cin.getline(tempStudent->lastname, 50);
+  cout << "You entered: " << tempStudent->lastname << endl;
 
   //enter student id
   cout << "Enter their student id: ";
-  cin >> tempStudent.studentid;
+  cin >> tempStudent->studentid;
   cout << "You entered: ";
-  cout << fixed << setprecision(2) << tempStudent.studentid << endl;
+  cout << tempStudent->studentid << endl;
 
   //enter their gpa
   cout << "Enter their gpa: ";
-  cin >> tempStudent.gpa;
-  cout << "You entered: " << tempStudent.gpa << endl;
+  cin >> tempStudent->gpa;
+  cout << "You entered: " << tempStudent->gpa << endl;
   entry.push_back(tempStudent);
   
 }
 
 //printing out all the students
 //mr galbraith helped me with the iterators
-void printOut(vector<StudentInfo>& entry) {
-  for(vector<StudentInfo>:: iterator it = entry.begin(); it != entry.end(); ++it) {
-    cout << "Name: " << it->firstname << " " << it->lastname << endl;
-    cout << "ID: " << it->studentid << endl;
-    cout << "GPA: " << it->gpa << endl;
+void printOut(vector<StudentInfo*>& entry) {
+  for(vector<StudentInfo*>:: iterator it = entry.begin(); it != entry.end(); ++it) {
+    cout << "Name: " << (*it)->firstname << " " << (*it)->lastname << endl;
+    cout << "ID: " << (*it)->studentid << endl;
+    cout << "GPA: " << fixed << setprecision(2) << (*it)->gpa << endl;
   }
 }
 
 //removing a student by their studnt id
-void removeStudent(vector<StudentInfo>& entry) {
-  StudentInfo tempStudent;
+void removeStudent(vector<StudentInfo*>& entry) {
+  int id;
   
   cout << "Enter the ID of the student you want to delete: ";
-  cin >> tempStudent.studentid;
+  cin >> id;
 
-  for(vector<StudentInfo>:: iterator it = entry.begin(); it != entry.end(); ++it) {
-    if (it->studentid == tempStudent.studentid ) {
-      it = entry.erase(it);
+  for(vector<StudentInfo*>:: iterator it = entry.begin(); it != entry.end(); ++it) {
+    if ((*it)->studentid == id ) {
+      delete *it; // free allocated memory
+	entry.erase(it);
+	cout << "Student Deleted!" << endl;
+	return;
     }
   }
 
+  cout << "Student not found!" << endl;
 }
 	       
